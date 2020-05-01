@@ -1,0 +1,157 @@
+# source: http://localhost:4000/graphql
+# timestamp: Wed Apr 08 2020 12:19:19 GMT+0530 (India Standard Time)
+
+type Dashboard {
+  pendingCount: Int!
+  userCount: Int!
+  dealerCount: Int!
+}
+
+input DealerMachineInput {
+  name: String!
+  description: String!
+  machineType: MachineType!
+  loadCapacity: String!
+  creator: String!
+}
+
+type History {
+  _id: ID!
+  machine: Machine!
+  creator: User!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input LiveInput {
+  readings: String!
+  machineId: String!
+}
+
+type LiveReadings {
+  _id: ID!
+  readings: String!
+  machine: Machine!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Machine {
+  _id: ID!
+  name: String!
+  description: String!
+  machineType: MachineType!
+  loadCapacity: String!
+  creator: User!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MachineList {
+  machines: [Machine!]!
+  totalCount: Int!
+}
+
+enum MachineType {
+  SINGLE_PHASE
+  THREE_PHASE
+}
+
+type Message {
+  message: String!
+}
+
+type Mutation {
+  _empty: String
+  createUser(userInput: UserInput): User!
+  editUser(id: ID!, userInput: UserInput): User!
+  deleteUser(id: ID!): Message!
+  createMachineByUser(machineInput: UserMachineInput): Message!
+  createMachineByDealer(machineInput: DealerMachineInput): Message!
+  editMachine(id: ID!, machineInput: DealerMachineInput): Machine!
+  deleteMachine(id: ID!): Message!
+  addLiveReadings(liveInput: LiveInput): Message!
+  updatePendingStatus(id: ID!): History!
+}
+
+type PendingList {
+  pendingReadings: [PendingReadings!]!
+  totalCount: Int!
+}
+
+type PendingReadings {
+  _id: ID!
+  creator: User!
+  machine: Machine!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Query {
+  _empty: String
+  loginUser(loginInput: LoginInput): UserAuth!
+  getUser(id: ID): User!
+  getUsersByRole(role: UserType!, page: Int): UserList!
+  getMachine(id: ID!): Machine!
+  getMachines(page: Int!): MachineList!
+  getMachinesByUser(page: Int!, id: ID): MachineList!
+  getDashboardOverview: Dashboard!
+  getPendingList(page: Int!): PendingList!
+  getHistoryCount: Int!
+}
+
+type Subscription {
+  _empty: String
+  getLiveReadingById: LiveReadings!
+}
+
+type User {
+  _id: ID!
+  name: String!
+  password: String!
+  type: UserType!
+  phone: String!
+  email: String!
+  address: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserAuth {
+  token: String!
+  name: String!
+  type: String!
+}
+
+input UserInput {
+  name: String!
+  password: String!
+  type: UserType!
+  phone: String!
+  email: String!
+  address: String
+}
+
+type UserList {
+  users: [User!]!
+  totalCount: Int!
+}
+
+input UserMachineInput {
+  name: String!
+  description: String!
+  machineType: MachineType!
+  loadCapacity: String!
+  userInput: UserInput!
+}
+
+enum UserType {
+  ADMIN
+  DEALER
+  USER
+}
